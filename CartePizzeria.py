@@ -1,4 +1,5 @@
 from CartePizzeriaException import CartePizzeriaException
+from Pizza import Pizza  
 
 class CartePizzeria:
     def __init__(self):
@@ -20,10 +21,11 @@ class CartePizzeria:
         for existing_element in self.elements:
             if existing_element.name == element.name:
                 if isinstance(existing_element, Pizza) and isinstance(element, Pizza):
-                    if existing_element.ingredients == element.ingredients and existing_element.base == element.base:
-                        raise CartePizzeriaException("La pizza {} est déjà présente dans la carte avec les mêmes ingrédients et base.".format(element.name))
-                else:
-                    raise CartePizzeriaException("L'élément {} est déjà présent dans la carte.".format(element.name))
+                    if hasattr(element, 'ingredients') and hasattr(element, 'base'):
+                        if existing_element.ingredients == element.ingredients and existing_element.base == element.base:
+                            raise CartePizzeriaException("La pizza {} est déjà présente dans la carte avec les mêmes ingrédients et base.".format(element.name))
+                    else:
+                        raise CartePizzeriaException("L'élément {} est déjà présent dans la carte.".format(element.name))
         self.elements.append(element)
 
     def remove(self, name):
