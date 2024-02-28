@@ -1,23 +1,34 @@
 from CartePizzeriaException import CartePizzeriaException
 
-
 class CartePizzeria:
     def __init__(self):
-        self.pizzas = []
+        self.elements = []
 
     def is_empty(self):
-        return len(self.pizzas) == 0
+        return len(self.elements) == 0
 
     def nb_pizzas(self):
-        return len(self.pizzas)
+        return sum(1 for element in self.elements if isinstance(element, Pizza))
 
-    def add_pizza(self, pizza):
-        self.pizzas.append(pizza)
+    def nb_drinks(self):
+        return sum(1 for element in self.elements if isinstance(element, Drink))
 
-    def remove_pizza(self, name):
-        for pizza in self.pizzas:
-            if pizza.name == name:
-                self.pizzas.remove(pizza)
+    def nb_desserts(self):
+        return sum(1 for element in self.elements if isinstance(element, Dessert))
+
+    def add(self, element):
+        for existing_element in self.elements:
+            if existing_element.name == element.name:
+                if isinstance(existing_element, Pizza) and isinstance(element, Pizza):
+                    if existing_element.ingredients == element.ingredients and existing_element.base == element.base:
+                        raise CartePizzeriaException("La pizza {} est déjà présente dans la carte avec les mêmes ingrédients et base.".format(element.name))
+                else:
+                    raise CartePizzeriaException("L'élément {} est déjà présent dans la carte.".format(element.name))
+        self.elements.append(element)
+
+    def remove(self, name):
+        for element in self.elements:
+            if element.name == name:
+                self.elements.remove(element)
                 return
-        raise CartePizzeriaException("La pizza {} n'existe pas dans la carte.".format(name))
-
+        raise CartePizzeriaException("L'élément {} n'existe pas dans la carte.".format(name))
